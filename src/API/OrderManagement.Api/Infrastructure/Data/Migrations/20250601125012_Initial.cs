@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace OrderManagement.Api.Infrastructure.Data.Migrations;
 
 /// <inheritdoc />
-public partial class DiscountingFeature : Migration
+public partial class Initial : Migration
 {
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,7 +19,6 @@ public partial class DiscountingFeature : Migration
             {
                 Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                 CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                Status = table.Column<int>(type: "int", nullable: false),
                 CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                 TotalAmount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false)
             },
@@ -39,19 +38,45 @@ public partial class DiscountingFeature : Migration
             },
             constraints: table => table.PrimaryKey("PK_Promotions", x => x.Id));
 
+        migrationBuilder.CreateTable(
+            name: "OrderStatuses",
+            columns: table => new
+            {
+                Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                State = table.Column<int>(type: "int", nullable: false),
+                UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+            },
+            constraints: table =>
+            {
+                table.PrimaryKey("PK_OrderStatuses", x => x.Id);
+                table.ForeignKey(
+                    name: "FK_OrderStatuses_Orders_OrderId",
+                    column: x => x.OrderId,
+                    principalTable: "Orders",
+                    principalColumn: "Id",
+                    onDelete: ReferentialAction.Cascade);
+            });
+
         migrationBuilder.InsertData(
             table: "Orders",
-            columns: new[] { "Id", "CreatedAt", "CustomerId", "Status", "TotalAmount" },
+            columns: new[] { "Id", "CreatedAt", "CustomerId", "TotalAmount" },
             values: new object[,]
             {
-                { new Guid("89b166d4-ac78-4c21-97c2-8944eaccdb43"), new DateTime(2025, 5, 31, 20, 27, 8, 118, DateTimeKind.Utc).AddTicks(2496), new Guid("523bca92-5f31-438c-a877-f2909837c2b8"), 2, 10000m },
-                { new Guid("d94d8bdf-ffcf-4f09-865a-fc3444510aa7"), new DateTime(2025, 5, 31, 20, 27, 8, 118, DateTimeKind.Utc).AddTicks(2401), new Guid("c6326406-e65f-44d1-82e3-880c09c823ec"), 0, 5000m }
+                { new Guid("1d472ecb-09df-45dd-9c2f-fd552263dfa1"), new DateTime(2025, 6, 1, 12, 49, 59, 210, DateTimeKind.Utc).AddTicks(2461), new Guid("ee8aa160-18e4-4128-bf3b-f2c3008c008c"), 10000m },
+                { new Guid("e838ccdc-9c85-43e9-a3a3-cb52bed4d1b0"), new DateTime(2025, 6, 1, 12, 49, 59, 210, DateTimeKind.Utc).AddTicks(2452), new Guid("cc4881a1-8a08-4eb1-8985-be25842484ee"), 5000m }
             });
 
         migrationBuilder.InsertData(
             table: "Promotions",
             columns: new[] { "Id", "CustomerSegment", "Name", "Type", "ValidFrom", "ValidTo", "Value" },
-            values: new object[] { new Guid("0aec6cd5-ace9-490b-ba10-33fe85cc5aae"), "New", "Vuka", "Percentage", new DateTime(2025, 5, 31, 20, 27, 8, 117, DateTimeKind.Utc).AddTicks(9307), null, 10m });
+            values: new object[] { new Guid("7b7bf5b9-3d8b-447f-855c-176fdf9c64fc"), "New", "Vuka", "Percentage", new DateTime(2025, 6, 1, 12, 49, 59, 210, DateTimeKind.Utc).AddTicks(157), null, 10m });
+
+        migrationBuilder.CreateIndex(
+            name: "IX_OrderStatuses_OrderId",
+            table: "OrderStatuses",
+            column: "OrderId",
+            unique: true);
 
         migrationBuilder.CreateIndex(
             name: "IX_Promotions_CustomerSegment",
@@ -68,9 +93,12 @@ public partial class DiscountingFeature : Migration
     protected override void Down(MigrationBuilder migrationBuilder)
     {
         migrationBuilder.DropTable(
-            name: "Orders");
+            name: "OrderStatuses");
 
         migrationBuilder.DropTable(
             name: "Promotions");
+
+        migrationBuilder.DropTable(
+            name: "Orders");
     }
 }

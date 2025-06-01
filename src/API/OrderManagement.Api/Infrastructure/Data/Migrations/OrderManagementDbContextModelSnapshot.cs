@@ -34,9 +34,6 @@ namespace OrderManagement.Api.Infrastructure.Data.Migrations
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("TotalAmount")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
@@ -48,20 +45,41 @@ namespace OrderManagement.Api.Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("d94d8bdf-ffcf-4f09-865a-fc3444510aa7"),
-                            CreatedAt = new DateTime(2025, 5, 31, 20, 27, 8, 118, DateTimeKind.Utc).AddTicks(2401),
-                            CustomerId = new Guid("c6326406-e65f-44d1-82e3-880c09c823ec"),
-                            Status = 0,
+                            Id = new Guid("e838ccdc-9c85-43e9-a3a3-cb52bed4d1b0"),
+                            CreatedAt = new DateTime(2025, 6, 1, 12, 49, 59, 210, DateTimeKind.Utc).AddTicks(2452),
+                            CustomerId = new Guid("cc4881a1-8a08-4eb1-8985-be25842484ee"),
                             TotalAmount = 5000m
                         },
                         new
                         {
-                            Id = new Guid("89b166d4-ac78-4c21-97c2-8944eaccdb43"),
-                            CreatedAt = new DateTime(2025, 5, 31, 20, 27, 8, 118, DateTimeKind.Utc).AddTicks(2496),
-                            CustomerId = new Guid("523bca92-5f31-438c-a877-f2909837c2b8"),
-                            Status = 2,
+                            Id = new Guid("1d472ecb-09df-45dd-9c2f-fd552263dfa1"),
+                            CreatedAt = new DateTime(2025, 6, 1, 12, 49, 59, 210, DateTimeKind.Utc).AddTicks(2461),
+                            CustomerId = new Guid("ee8aa160-18e4-4128-bf3b-f2c3008c008c"),
                             TotalAmount = 10000m
                         });
+                });
+
+            modelBuilder.Entity("OrderManagement.Api.Domain.Entities.OrderStatus", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId")
+                        .IsUnique();
+
+                    b.ToTable("OrderStatuses");
                 });
 
             modelBuilder.Entity("OrderManagement.Api.Domain.Entities.Promotion", b =>
@@ -104,13 +122,30 @@ namespace OrderManagement.Api.Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("0aec6cd5-ace9-490b-ba10-33fe85cc5aae"),
+                            Id = new Guid("7b7bf5b9-3d8b-447f-855c-176fdf9c64fc"),
                             CustomerSegment = "New",
                             Name = "Vuka",
                             Type = "Percentage",
-                            ValidFrom = new DateTime(2025, 5, 31, 20, 27, 8, 117, DateTimeKind.Utc).AddTicks(9307),
+                            ValidFrom = new DateTime(2025, 6, 1, 12, 49, 59, 210, DateTimeKind.Utc).AddTicks(157),
                             Value = 10m
                         });
+                });
+
+            modelBuilder.Entity("OrderManagement.Api.Domain.Entities.OrderStatus", b =>
+                {
+                    b.HasOne("OrderManagement.Api.Domain.Entities.Order", "Order")
+                        .WithOne("OrderStatus")
+                        .HasForeignKey("OrderManagement.Api.Domain.Entities.OrderStatus", "OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("OrderManagement.Api.Domain.Entities.Order", b =>
+                {
+                    b.Navigation("OrderStatus")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

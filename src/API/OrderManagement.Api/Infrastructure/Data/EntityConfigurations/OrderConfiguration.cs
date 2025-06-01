@@ -18,17 +18,15 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
                 Id = Guid.NewGuid(),
                 CustomerId=Guid.NewGuid(),
                 CreatedAt = DateTime.UtcNow,
-                Status = OrderStatus.Created,
-                TotalAmount = 5000
+                TotalAmount = 5000,
             },
             new Order
             {
                 Id = Guid.NewGuid(),
                 CustomerId = Guid.NewGuid(),
                 CreatedAt = DateTime.UtcNow,
-                Status = OrderStatus.Shipped,
                 TotalAmount = 10000
             }
-            );
+        );
     }
 }

@@ -27,6 +27,9 @@ public static class DependencyInjection
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IPromotionRepository, PromotionRepository>();
         services.AddScoped<IDiscountStrategyFactory, DiscountStrategyFactory>();
+        services.AddScoped<IOrderStatusService, OrderStatusService>();
+        services.AddScoped<IOrderStatusRepository, OrderStatusRepository>();
+
 
         return services;
     }

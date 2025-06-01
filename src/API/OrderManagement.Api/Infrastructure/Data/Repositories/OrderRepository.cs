@@ -28,7 +28,6 @@ public class OrderRepository : IOrderRepository
     public async Task<IEnumerable<Order>> GetOrdersInDateRangeAsync(DateTime startDate, DateTime endDate)
     {
         return await _context.Orders
-            .Include(o => o.Status)
             .Where(o => o.CreatedAt >= startDate && o.CreatedAt <= endDate)
             .ToListAsync();
     }

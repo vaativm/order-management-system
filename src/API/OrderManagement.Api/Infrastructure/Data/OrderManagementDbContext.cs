@@ -12,6 +12,7 @@ public class OrderManagementDbContext : DbContext, IOrderManagementDbContext
 
     public DbSet<Promotion> Promotions { get; set ; }
     public DbSet<Order> Orders { get; set; }
+    public DbSet<OrderStatus> OrderStatuses { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -19,5 +20,6 @@ public class OrderManagementDbContext : DbContext, IOrderManagementDbContext
 
         modelBuilder.ApplyConfiguration(new PromotionConfiguration());
         modelBuilder.ApplyConfiguration(new OrderConfiguration());
+        modelBuilder.ApplyConfiguration(new OrderStatusConfiguration());
     }
 }
