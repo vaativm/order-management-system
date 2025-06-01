@@ -60,8 +60,8 @@ public class DiscountService : IDiscountService
 
         return (totalSpend, orderCount) switch
         {
-            ( > 1000, > 10) => CustomerSegment.VIP,
-            ( > 500, > 5) => CustomerSegment.Regular,
+            ( > 1000, > 5) => CustomerSegment.VIP,
+            ( > 500, > 2) => CustomerSegment.Regular,
             _ => CustomerSegment.New
         };
 
